@@ -1,0 +1,38 @@
+.footer {
+	position: relative;
+	clear: both;
+	height: 100px;
+	bottom: 0;
+	color: #fff;
+	background-color: #F8C3CD;
+	margin-top: 40px;
+}
+
+
+
+.friendly-link{
+	list-style-type: none;
+	text-align: left;
+}
+
+.friendly-link li a {
+	outline: none;
+	text-decoration: none;
+	cursor: pointer;
+	color: #000000;
+}
+
+.friendly-link li a:hover {
+	color: cornflowerblue;
+}
+
+.main-title{
+	position: absolute;
+	margin-top: 50px;
+}
+
+.bg-mainpink{
+	color:#fff;
+	background-color:#DC9FB4;
+}
+

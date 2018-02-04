@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>个人主页-我的作品</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+		<link href="vix.png" rel="shortcut icon" />
+		<link rel="stylesheet" href="css/vixSiteMain.css" />
+		<link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/fileinput.min.css" />
+		
+		<script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+		<script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="js/fileinput.min.js"></script>
+		<script type="text/javascript" src="js/zh.js"></script>
+		<script type="text/javascript">
+			function getfile(){
+				xmlhttp=new XMLHttpRequest();
+				xmlhttp.onreadystatechange=function()
+			    {
+			        if (xmlhttp.readyState==4 && xmlhttp.status==200)
+			        {
+			            document.getElementById("pic-container").innerHTML=xmlhttp.responseText;
+			        }
+			    }
+				xmlhttp.open("GET","php/getfile.php",true);
+    			xmlhttp.send();
+			}
+			
+			window.onload = function getcontent() {
+				var cookieName = 'username';
+				var username = '';
+				var pos = document.cookie.indexOf(cookieName + "=");
+				if(pos != -1) {
+					pos = pos + cookieName.length + 1;
+					last = document.cookie.indexOf(";", pos);
+					if(last == -1) last = document.cookie.length;
+					username = unescape(document.cookie.substring(pos, last));
+				}
+				if(username == '' || !username) {
+					var unlogstr = '<a class="nav-link" href="login.html" target="_blank" id="login-btn">请登录</a>'
+					document.getElementById('userp').innerHTML = unlogstr;
+					document.getElementById('upld-container').innerHTML='<button class="btn btn-default" href="login.html">请登录</button>';
+				} else {
+					logedstr = '<a class="nav-link" href="personal-page.html" target="_blank">' + username + '</a>';
+					document.getElementById('userp').innerHTML = logedstr;
+					unlogstr = '<a class="nav-link" href="php/logout.php" id="logout-btn">注销</a>';
+					document.getElementById('unlogp').innerHTML = unlogstr;
+					upldstr = '<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal" id="upld-btn">投稿</button>';
+					document.getElementById('upld-container').innerHTML = upldstr;
+				}
+				getfile();
+			}
+		</script>
+	</head>
+
+	<body>
+		<!--
+        	作者：sweetfish1314@gmail.com
+        	时间：2018-01-10
+        	描述：导航栏
+       -->
+
+		<nav class="navbar navbar-dark bg-mainpink" role="navigation">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<a class="navbar-brand" href="###">VIX</a>
+				</div>
+				<div>
+					<ul class="nav navbar-nav navbar-left">
+						<li class="active">
+							<a href="index.html" target="_blank">主站</a>
+						</li>
+					</ul>
+					<p class="navbar-text navbar-left">vix插画交流网站</p>
+
+					<ul class="nav navbar-nav navbar-right">
+						<li class="nav-item active" id="userp">
+						</li>
+						<li class="nav-item active" id="unlogp">
+						</li>
+					</ul>
+					<form class="navbar-form form-inline navbar-right" role="search" action="php/search-navbar.php" method="post">
+						<div class="form-group">
+							<input class="form-control" type="text" placeholder="Search" id="search-text" name="searchtext">
+							<select class="form-control" id="search-type" name="searchtype">
+								<option value="1" selected="selected">插画名</option>
+								<option value="2">作者</option>
+							</select>
+						</div>
+						<button class="btn btn-dark" type="submit">搜索</button>
+					</form>
+				</div>
+			</div>
+		</nav>
+
+		<!--
+        	作者：sweetfish1314@gmail.com
+        	时间：2018-01-17
+        	描述：左侧导航栏、主页
+        -->
+		<div class="container">
+			<ul class="nav nav-pills nav-stacked col-md-3">
+				<li>
+					<a href="personal-page.html">我的概况</a>
+				</li>
+				<li class="active">
+					<a href="###">我的作品</a>
+				</li>
+				<li>
+					<a href="pp-chdt.html">修改资料</a>
+				</li>
+			</ul>
+			
+			<!--
+            	作者：sweetfish1314@gmail.com
+            	时间：2018-01-19
+            	描述：作品栏
+            -->
+            <div class="container-fluid col-md-7">
+				<div  class="container-fluid">
+					<div class="row" id="pic-container">
+						
+					</div>
+				</div>
+				<div class="container">
+					<div class="row" id ="upld-container">
+						<p></p>
+					</div>
+				</div>
+				<!-- 模态框（Modal） -->
+				<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+								<h4 class="modal-title" id="myModalLabel">上传你的作品</h4>
+							</div>
+							<div class="modal-body">
+								<form>
+									<input type="file" name="file" id="file" multiple class="file-loading" />
+								</form>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default" data-dismiss="modal" onclick="window.location.reload(true);">关闭</button>
+							</div>
+						</div>
+						<!-- /.modal-content -->
+					</div>
+					<!-- /.modal -->
+				</div>
+			</div>
+
+		</div>
+			
+			
+			<!--
+            	作者：sweetfish1314@gmail.com
+            	时间：2018-01-18
+            	描述：上传文件控件
+            -->
+			<script>
+				$(function() {
+					//0.初始化fileinput
+					var oFileInput = new FileInput();
+					oFileInput.Init("file", "php/upload.php");
+				});
+				//初始化fileinput
+				var FileInput = function() {
+					var oFile = new Object();
+
+					//初始化fileinput控件（第一次初始化）
+					oFile.Init = function(ctrlName, uploadUrl) {
+						var control = $('#' + ctrlName);
+
+						//初始化上传控件的样式
+						control.fileinput({
+							language: 'zh', //设置语言
+							uploadUrl: uploadUrl, //上传的地址
+							allowedFileExtensions: ['jpg', 'gif', 'png', 'jpeg'], //接收的文件后缀
+							showUpload: true, //是否显示上传按钮
+							showCaption: false, //是否显示标题
+							browseClass: "btn btn-primary", //按钮样式     
+							//dropZoneEnabled: false,//是否显示拖拽区域
+							//minImageWidth: 50, //图片的最小宽度
+							//minImageHeight: 50,//图片的最小高度
+							//maxImageWidth: 1000,//图片的最大宽度
+							//maxImageHeight: 1000,//图片的最大高度
+							maxFileSize: 0,//单位为kb，如果为0表示不限制文件大小
+							//minFileCount: 0,
+							maxFileCount: 10, //表示允许同时上传的最大文件个数
+							enctype: 'multipart/form-data',
+							validateInitialCount: true,
+							previewFileIcon: "<i class='glyphicon glyphicon-king'></i>",
+							msgFilesTooMany: "选择上传的文件数量({n}) 超过允许的最大数值{m}！",
+						});
+
+						//导入文件上传完成之后的事件
+						$("#txt_file").on("fileuploaded", function(event, data, previewId, index) {
+							$("#myModal").modal("hide");
+							var data = data.response.lstOrderImport;
+							if(data == undefined) {
+								toastr.error('文件格式类型不正确');
+								return;
+							}
+							//1.初始化表格
+							var oTable = new TableInit();
+							oTable.Init(data);
+							$("#div_startimport").show();
+						});
+					}
+					return oFile;
+				};
+			</script>
+		</div>
+		<!--
+        	作者：sweetfish1314@gmail.com
+        	时间：2018-01-19
+        	描述：删除文件控件
+        -->
+		<script>
+			function dltfile(idnum){
+				xmlhttp=new XMLHttpRequest();
+				xmlhttp.onreadystatechange=function()
+			    {
+			        if (xmlhttp.readyState==4 && xmlhttp.status==200)
+			        {
+			            alert(xmlhttp.responseText);
+			            window.location.reload();
+			        }
+			    }
+				xmlhttp.open("GET","php/dltfile.php?id=" + idnum,true);
+    			xmlhttp.send();
+			}
+		</script>
+		
+		
+		
+		
+		<!--
+        	作者：sweetfish1314@gmail.com
+        	时间：2018-01-14
+        	描述：底端栏
+       -->
+		<div class="row footer">
+			<div class="col-md-2"></div>
+			<div class="col-md-5">
+				<p class="text-dark"><br><br>联系我们：sweetfish1314@gmail.com</p>
+			</div>
+			<div class="col-md-5">
+				<div>
+					<ul class="friendly-link">
+						<li>
+							<p>友情链接</p>
+						</li>
+						<li>
+							<a href="http://www.baidu.com" target="_blank">百度</a>
+						</li>
+						<li>
+							<a href="http://www.bilibili.com" target="_blank">哔哩哔哩</a>
+						</li>
+						<li>
+							<a href="http://www.pixiv.net" target="_blank">pixiv</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+	</body>
+
+</html>

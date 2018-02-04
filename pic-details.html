@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link href="vix.png" rel="shortcut icon" />
+		<link rel="stylesheet" href="css/vixSiteMain.css" />
+		<link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+		<script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+		<script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<script type="text/javascript">
+			function getvisitnum() {
+				var picid = GetQueryString("picID");
+				xmlhttp2 = new XMLHttpRequest();
+				xmlhttp2.onreadystatechange = function() {
+					if(xmlhttp2.readyState == 4 && xmlhttp2.status == 200) {
+						document.getElementById("vnum-dis").innerHTML = xmlhttp2.responseText;
+					}
+				}
+				xmlhttp2.open("GET", "php/visitnum.php?picID=" + picid, true);
+				xmlhttp2.send();
+			}
+
+			function getpic() {
+				var picid = GetQueryString("picID");
+				xmlhttp = new XMLHttpRequest();
+				xmlhttp.onreadystatechange = function() {
+					if(xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+						document.title = 'vix 插画id' + picid;
+						document.getElementById("pic-dis").innerHTML = xmlhttp.responseText;
+					}
+				}
+				xmlhttp.open("GET", "php/dispic.php?picID=" + picid, true);
+				xmlhttp.send();
+			}
+
+			function getcmt() {
+				var picid = GetQueryString("picID");
+				xmlhttp1 = new XMLHttpRequest();
+				xmlhttp1.onreadystatechange = function() {
+					if(xmlhttp1.readyState == 4 && xmlhttp1.status == 200) {
+						if(xmlhttp1.responseText != "")
+							document.getElementById("cmt-dis").innerHTML = xmlhttp1.responseText;
+					}
+				}
+				xmlhttp1.open("GET", "php/getcmt.php?picID=" + picid, true);
+				xmlhttp1.send();
+			}
+
+			window.onload = function getuser() {
+				getvisitnum();
+				getpic();
+				var cookieName = 'username';
+				var username = '';
+				pos = document.cookie.indexOf(cookieName + "=");
+				if(pos != -1) {
+					pos = pos + cookieName.length + 1;
+					last = document.cookie.indexOf(";", pos);
+					if(last == -1) last = document.cookie.length;
+					username = unescape(document.cookie.substring(pos, last));
+				}
+
+				if(username == '' || !username) {
+					var unlogstr = '<a class="nav-link" href="login.html" target="_blank">请登录</a>'
+					document.getElementById('userp').innerHTML = unlogstr;
+					document.getElementById("sendcmt").innerHTML = '<div class="well text-center">登陆后再评论</div>';
+				} else {
+					logedstr = '<a class="nav-link" href="personal-page.html" target="_blank">' + username + '</a>';
+					document.getElementById('userp').innerHTML = logedstr;
+					unlogstr = '<a class="nav-link" href="php/logout.php" >注销</a>';
+					document.getElementById('unlogp').innerHTML = unlogstr;
+				}
+				getcmt();
+			}
+
+			function GetQueryString(name) {
+				var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+				var r = window.location.search.substr(1).match(reg);
+				if(r != null) return unescape(r[2]);
+				return null;
+			}
+		</script>
+	</head>
+
+	<body>
+		<!--
+        	作者：sweetfish1314@gmail.com
+        	时间：2018-01-10
+        	描述：导航栏
+       -->
+
+		<nav class="navbar navbar-dark bg-mainpink" role="navigation">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<a class="navbar-brand" href="###">VIX</a>
+				</div>
+				<div>
+					<ul class="nav navbar-nav navbar-left">
+						<li class="active">
+							<a href="index.html" target="_blank">主站</a>
+						</li>
+					</ul>
+					<p class="navbar-text navbar-left">vix插画交流网站</p>
+
+					<ul class="nav navbar-nav navbar-right">
+						<li class="nav-item active" id="userp">
+						</li>
+						<li class="nav-item active" id="unlogp">
+						</li>
+					</ul>
+					<form class="navbar-form form-inline navbar-right" role="search" action="php/search-navbar.php" method="post">
+						<div class="form-group">
+							<input class="form-control" type="text" placeholder="Search" id="search-text" name="searchtext">
+							<select class="form-control" id="search-type" name="searchtype">
+								<option value="1" selected="selected">插画名</option>
+								<option value="2">作者</option>
+							</select>
+						</div>
+						<button class="btn btn-dark" type="submit">搜索</button>
+					</form>
+				</div>
+			</div>
+		</nav>
+
+		<!--
+        	作者：sweetfish1314@gmail.com
+        	时间：2018-01-15
+        	描述：图片显示
+        -->
+		<div class="container" id="pic-dis">
+
+		</div>
+		<!--
+        	作者：sweetfish1314@gmail.com
+        	时间：2018-01-20
+        	描述：评论显示
+        -->
+		
+		<div class="container">
+			
+			<div id="sendcmt">
+				<form class="" action="php/sendcmt.php" method="post">
+					<div class="form-group">
+						<label for="name">发表评论</label>
+						<textarea class="form-control" rows="3" id="cmtcnt" name="cmtcnt"></textarea>
+					</div>
+					<input style="display:none" name="picID" id="add">
+					<button class="btn btn-dark" id="search-submit" type="submit" onclick="adddata();">评论</button>
+				</form>
+			</div>
+			<script>
+				function adddata() {
+					var picid = GetQueryString("picID");
+					document.getElementById('add').value = picid;
+				}
+			</script>
+			<hr />
+			<h3>评论列表</h3>
+			<hr />
+			<div id="cmt-dis">
+				<div class="well text-center">暂无评论~~</div>
+			</div>
+
+		</div>
+
+		<!--
+        	作者：sweetfish1314@gmail.com
+        	时间：2018-01-14
+        	描述：底端栏
+        -->
+		<div class="row footer">
+			<div class="col-md-2"></div>
+			<div class="col-md-5">
+				<div id="vnum-dis"></div>
+				<p class="text-dark"><br>联系我们：sweetfish1314@gmail.com</p>
+				
+			</div>
+			<div class="col-md-5">
+				<div>
+					<ul class="friendly-link">
+						<li>
+							<p>友情链接</p>
+						</li>
+						<li>
+							<a href="http://www.baidu.com" target="_blank">百度</a>
+						</li>
+						<li>
+							<a href="http://www.bilibili.com" target="_blank">哔哩哔哩</a>
+						</li>
+						<li>
+							<a href="http://www.pixiv.net" target="_blank">pixiv</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			
+		</div>
+		
+	</body>
+
+</html>

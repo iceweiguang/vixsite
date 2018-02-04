@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>个人主页-修改信息</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+		<link href="vix.png" rel="shortcut icon" />
+		<link rel="stylesheet" href="css/dcalendar.picker.css" />
+		<link rel="stylesheet" href="css/vixSiteMain.css" />
+		<link rel="stylesheet" type="text/css" href="css/zzsc.css">
+		<link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+		
+		<script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<script src="js/jquery-1.11.0.min.js" type="text/javascript"></script>
+		<script src="js/dcalendar.picker.js" type="text/javascript"></script>
+		<script type="text/javascript" src="js/modifycheck.js" ></script>
+		<script type="text/javascript">
+			
+			window.onload = function getuser() {
+				
+				var cookieName = 'username';
+				var username = '';
+
+				pos = document.cookie.indexOf(cookieName + "=");
+				if(pos != -1) {
+					pos = pos + cookieName.length + 1;
+					last = document.cookie.indexOf(";", pos);
+					if(last == -1) last = document.cookie.length;
+					username = unescape(document.cookie.substring(pos, last));
+				}
+				getuData(username);
+				if(username == '' || !username) {
+					var unlogstr = '<a class="nav-link" href="login.html" target="_blank">请登录</a>';
+					document.getElementById('userp').innerHTML = unlogstr;
+					var loginbtn = '<a class="btn btn-default" href="login.html">请登录</a>';
+					document.getElementById('userdatach').innerHTML = loginbtn;
+				} else {
+					logedstr = '<a class="nav-link" href="personal-page.html" target="_blank">' + username + '</a>';
+					document.getElementById('userp').innerHTML = logedstr;
+					unlogstr = '<a class="nav-link" href="php/logout.php" >注销</a>';
+					document.getElementById('unlogp').innerHTML = unlogstr;
+				}
+				
+				
+			}
+			function getuData(username){
+				
+				xmlhttp = new XMLHttpRequest();
+				xmlhttp.onreadystatechange = function() {
+					if(xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+						var v = JSON.parse(xmlhttp.responseText);
+						
+						document.getElementById("usernameR").innerHTML = v[2];
+						document.getElementById("mottoR").value = v[7];
+						document.getElementById("nicknameR").value = v[4];
+						document.getElementById("emailR").value = v[5];
+						document.getElementById("mydatepicker").value = v[8];
+						if(v[6]=='M') document.getElementById("sex1").checked = "checked";
+						else if(v[6]=='F') document.getElementById("sex2").checked = "checked";
+						else document.getElementById("sex3").checked = "checked";
+					}
+				}
+				xmlhttp.open("GET", "php/getud.php?un=" + username, true);
+				xmlhttp.send();
+			}
+		</script>
+	</head>
+
+	<body>
+		<!--
+        	作者：sweetfish1314@gmail.com
+        	时间：2018-01-10
+        	描述：导航栏
+       -->
+
+		<nav class="navbar navbar-dark bg-mainpink" role="navigation">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<a class="navbar-brand" href="###">VIX</a>
+				</div>
+				<div>
+					<ul class="nav navbar-nav navbar-left">
+						<li class="active">
+							<a href="index.html" target="_blank">主站</a>
+						</li>
+					</ul>
+					<p class="navbar-text navbar-left">vix插画交流网站</p>
+
+					<ul class="nav navbar-nav navbar-right">
+						<li class="nav-item active" id="userp">
+						</li>
+						<li class="nav-item active" id="unlogp">
+						</li>
+					</ul>
+					<form class="navbar-form form-inline navbar-right" role="search" action="php/search-navbar.php" method="post">
+						<div class="form-group">
+							<input class="form-control" type="text" placeholder="Search" id="search-text" name="searchtext">
+							<select class="form-control" id="search-type" name="searchtype">
+								<option value="1" selected="selected">插画名</option>
+								<option value="2">作者</option>
+							</select>
+						</div>
+						<button class="btn btn-dark" type="submit">搜索</button>
+					</form>
+				</div>
+			</div>
+		</nav>
+
+		<!--
+        	作者：sweetfish1314@gmail.com
+        	时间：2018-01-17
+        	描述：左侧导航栏、主页
+        -->
+		<div class="container">
+			<ul class="nav nav-pills nav-stacked col-md-3">
+				<li>
+					<a href="personal-page.html">我的概况</a>
+				</li>
+				<li>
+					<a href="pp-myworks.html">我的作品</a>
+				</li>
+				<li class="active">
+					<a href="###">修改资料</a>
+				</li>
+			</ul>
+			<div class="col-md-9" id="userdatach">
+				<form class="form-horizontal register-form" role="form" action="php/updateuser.php" method="post" id="modify-form">
+			<div class="form-group text-left">
+				<label for="userNameR" class="col-sm-3 control-label">用户名</label>
+				<div class="col-sm-6" id="usernameR"></div>
+			</div>
+	
+			<div class="form-group">
+				<label for="sexR" class="col-sm-3 control-label">性别</label>
+				<div class="col-sm-6">
+					<label class="radio-inline"><input type="radio" name="sex" value="M" id="sex1">男</label>
+					<label class="radio-inline"><input type="radio" name="sex" value="F" id="sex2">女</label>
+					<label class="radio-inline"><input type="radio" name="sex" value="S" id="sex3">保密</label>
+				</div>
+				<label for="sexR" class="control-label" id="sexE">(修改性别这种事情嘛~~)</label>
+			</div>
+			<div class="form-group">
+				<label for="mottoR" class="col-sm-3 control-label">签名</label>
+				<div class="col-sm-6">
+					<input type="text" class="form-control" id="mottoR" placeholder="你的名言~" name="motto" />
+				</div>
+				<label for="mottoR" class="control-label">(不超过200个字符哦)</label>
+			</div>
+			<div class="form-group">
+				<label for="nicknameR" class="col-sm-3 control-label">昵称</label>
+				<div class="col-sm-6">
+					<input type="text" class="form-control" id="nicknameR" placeholder="你可爱的昵称~" name="nickname" />
+				</div>
+				<label for="nicknameR" class="control-label">(6-20个字符哦)</label>
+			</div>
+			<div class="form-group">
+				<label for="emailR" class="col-sm-3 control-label">电子邮箱</label>
+				<div class="col-sm-6">
+					<input type="text" class="form-control" id="emailR" placeholder="让我们可以联系到你~" name="email" />
+				</div>
+				<label for="emailR" class="control-label">(栗子：zzai@zzai.com)</label>
+			</div>
+			<div class="form-group">
+				<label for="mydatepicker" class="col-sm-3 control-label">出生日期</label>
+				<div class="col-sm-6">
+					<input id="mydatepicker" type="text" name="birthday" class="form-control" />
+				</div>
+				<label for="mydatepicker" class="control-label">(这一天世界上出现了你~)</label>
+			</div>
+					
+			<div class="form-group">
+				<div class="col-sm-offset-3 col-sm-7">
+					<button id="modifyBtn" class="btn btn-default">填好了！</button>
+				</div>
+			</div>
+		</form>
+			</div>
+		</div>
+
+		<!--
+        	作者：sweetfish1314@gmail.com
+        	时间：2018-01-11
+        	描述：日历js脚本
+        -->
+		<script type="text/javascript">
+			$('#mydatepicker').dcalendarpicker({
+				format: 'yyyy-mm-dd'
+			});
+		</script>
+
+		<!--
+        	作者：sweetfish1314@gmail.com
+        	时间：2018-01-14
+        	描述：底端栏
+       -->
+		<div class="row footer">
+			<div class="col-md-2"></div>
+			<div class="col-md-5">
+				<p class="text-dark"><br><br>联系我们：sweetfish1314@gmail.com</p><br>
+			</div>
+			<div class="col-md-5">
+				<div>
+					<ul class="friendly-link">
+						<li>
+							<p>友情链接</p>
+						</li>
+						<li>
+							<a href="http://www.baidu.com" target="_blank">百度</a>
+						</li>
+						<li>
+							<a href="http://www.bilibili.com" target="_blank">哔哩哔哩</a>
+						</li>
+						<li>
+							<a href="http://www.pixiv.net" target="_blank">pixiv</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+	</body>
+
+</html>

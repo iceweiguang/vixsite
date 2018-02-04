@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>个人主页-个人信息</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+		<link href="vix.png" rel="shortcut icon" />
+		<link rel="stylesheet" href="css/vixSiteMain.css" />
+		<link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+		<script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+		<script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<script type="text/javascript">
+			function getUserData(username) {
+				xmlhttp = new XMLHttpRequest();
+				xmlhttp.onreadystatechange = function() {
+					if(xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+						var v=JSON.parse(xmlhttp.responseText);
+						//document.write(v);
+						var sex = '';
+						document.getElementById("userID-value").innerHTML = v[1];
+						document.getElementById("username-value").innerHTML = v[2];
+						document.getElementById("nickname-value").innerHTML = v[4];
+						document.getElementById("email-value").innerHTML = v[5];
+						document.getElementById("birth-value").innerHTML = v[8];
+						document.getElementById("motto-value").innerHTML = v[7];
+						document.getElementById("follower-value").innerHTML = v[9];
+						document.getElementById("follow-value").innerHTML = v[10];
+						if(v[6]=="M") sex = "男";
+						else if(v[6]=="F") sex = "女";
+						else sex = "保密";
+						document.getElementById("sex-value").innerHTML = sex;
+					}
+				}
+				xmlhttp.open("GET", "php/getuserdata.php?username=" + username, true);
+				xmlhttp.send();
+			}
+
+			window.onload = function getuser() {
+				var cookieName = 'username';
+				var username = '';
+		
+				pos = document.cookie.indexOf(cookieName + "=");
+				if(pos != -1) {
+					pos = pos + cookieName.length + 1;
+					last = document.cookie.indexOf(";", pos);
+					if(last == -1) last = document.cookie.length;
+					username = unescape(document.cookie.substring(pos, last));
+				}
+				getUserData(username);
+				if(username == '' || !username) {
+					var unlogstr = '<a class="nav-link" href="login.html" target="_blank">请登录</a>';
+					document.getElementById('userp').innerHTML = unlogstr;
+					var loginbtn = '<a class="btn btn-default" href="login.html">请登录</a>';
+					document.getElementById('userdatach').innerHTML = loginbtn;
+				} else {
+					logedstr = '<a class="nav-link" href="personal-page.html" target="_blank">' + username + '</a>';
+					document.getElementById('userp').innerHTML = logedstr;
+					unlogstr = '<a class="nav-link" href="php/logout.php" >注销</a>';
+					document.getElementById('unlogp').innerHTML = unlogstr;
+				}
+			}
+			
+		</script>
+	</head>
+
+	<body>
+		<!--
+        	作者：sweetfish1314@gmail.com
+        	时间：2018-01-10
+        	描述：导航栏
+       -->
+
+		<nav class="navbar navbar-dark bg-mainpink" role="navigation">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<a class="navbar-brand" href="###">VIX</a>
+				</div>
+				<div>
+					<ul class="nav navbar-nav navbar-left">
+						<li class="active">
+							<a href="index.html" target="_blank">主站</a>
+						</li>
+					</ul>
+					<p class="navbar-text navbar-left">vix插画交流网站</p>
+
+					<ul class="nav navbar-nav navbar-right">
+						<li class="nav-item active" id="userp">
+						</li>
+						<li class="nav-item active" id="unlogp">
+						</li>
+					</ul>
+					<form class="navbar-form form-inline navbar-right" role="search" action="php/search-navbar.php" method="post">
+						<div class="form-group">
+							<input class="form-control" type="text" placeholder="Search" id="search-text" name="searchtext">
+							<select class="form-control" id="search-type" name="searchtype">
+								<option value="1" selected="selected">插画名</option>
+								<option value="2">作者</option>
+							</select>
+						</div>
+						<button class="btn btn-dark" type="submit">搜索</button>
+					</form>
+				</div>
+			</div>
+		</nav>
+
+		<!--
+        	作者：sweetfish1314@gmail.com
+        	时间：2018-01-17
+        	描述：左侧导航栏、主页
+        -->
+		<div class="container">
+			<ul class="nav nav-pills nav-stacked col-md-3">
+				<li class="active">
+					<a href="###">我的概况</a>
+				</li>
+				<li>
+					<a href="pp-myworks.html">我的作品</a>
+				</li>
+				<li>
+					<a href="pp-chdt.html">修改资料</a>
+				</li>
+			</ul>
+
+			<div class="col-md-6" id="userdatadis">
+				<form action="" class="form-horizontal">
+					<h3 class="text-center">你的资料</h3>
+					<div class="form-group">
+						<label for="userID-value" class="col-md-3 control-label">ID</label>
+						<div class="col-md-9 form-control-static" id="userID-value"></div>
+					</div>
+					<div class="form-group">
+						<label for="username-value" class="col-md-3 control-label">用户名</label>
+						<div class="col-md-9 form-control-static" id="username-value"></div>
+					</div>
+					<div class="form-group">
+						<label for="nickname-value" class="col-md-3 control-label">昵称</label>
+						<div class="col-md-9 form-control-static" id="nickname-value"></div>
+					</div>
+					<div class="form-group">
+						<label for="follow-value" class="col-md-3 control-label">邮箱</label>
+						<div class="col-md-9 form-control-static" id="email-value"></div>
+					</div>
+					<div class="form-group">
+						<label for="sex-value" class="col-md-3 control-label">性别</label>
+						<div class="col-md-9 form-control-static" id="sex-value"></div>
+					</div>
+					<div class="form-group">
+						<label for="birth-value" class="col-md-3 control-label">出生日期</label>
+						<div class="col-md-9 form-control-static" id="birth-value"></div>
+					</div>
+					<div class="form-group">
+						<label for="motto-value" class="col-md-3 control-label">签名</label>
+						<div class="col-md-9 form-control-static" id="motto-value"></div>
+					</div>
+					<div class="form-group">
+						<label for="follower-value" class="col-md-3 control-label">粉丝数</label>
+						<div class="col-md-9 form-control-static" id="follower-value"></div>
+					</div>
+					<div class="form-group">
+						<label for="follow-value" class="col-md-3 control-label">关注数</label>
+						<div class="col-md-9 form-control-static" id="follow-value"></div>
+					</div>
+				</form>
+			</div>
+		</div>
+
+		<!--
+        	作者：sweetfish1314@gmail.com
+        	时间：2018-01-14
+        	描述：底端栏
+       -->
+		<div class="row footer">
+			<div class="col-md-2"></div>
+			<div class="col-md-5">
+				<p class="text-dark"><br><br>联系我们：sweetfish1314@gmail.com</p>
+			</div>
+			<div class="col-md-5">
+				<div>
+					<ul class="friendly-link">
+						<li>
+							<p>友情链接</p>
+						</li>
+						<li>
+							<a href="http://www.baidu.com" target="_blank">百度</a>
+						</li>
+						<li>
+							<a href="http://www.bilibili.com" target="_blank">哔哩哔哩</a>
+						</li>
+						<li>
+							<a href="http://www.pixiv.net" target="_blank">pixiv</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+	</body>
+
+</html>
